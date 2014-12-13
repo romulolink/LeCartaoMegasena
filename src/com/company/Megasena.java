@@ -3,14 +3,12 @@ package com.company;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-// import imglib.*;
-// Quantidade de Marcacoes: 48
-// Marcações: 19
-// LinhasId: 29
-// Na primeira fileira 25
-// Na primeira coluna 5
-
-
+/*
+*  Foram realizados os seguintes testes:
+*  A propria imagem fornecida
+*  Marcações a mais adicionadas a imagem fornecida
+*  Anulação de jogos na imagem fornecida
+* */
 public class Megasena {
 
 
@@ -59,7 +57,8 @@ public class Megasena {
                     // pelo menos cem ocorrencias no mesmo artefato
                     // Evitar marcação de Bola que perternce a outra linha
                     if(acc == 100){
-                        System.out.printf("Ocorrencia: x= " + A.pega(m).y() + " y= " + M.pega(n).y() + " ");
+                      //  System.out.printf("Ocorrencia: x= " + A.pega(m).y() + " y= " + M.pega(n).y() + " ");
+
                         return true;
                     }
                     acc++;
@@ -104,51 +103,13 @@ public class Megasena {
 
 
 
-        // Encontrar Distancia Colunas
-        /*for (y=0; y < 150; y++) {
-            for (x = 0; x < 250; x++) {
-                pix = img.Pixel(x, y);
-                if (cinza(pix)) {
-
-                    System.out.printf("x = " + x + " y = " + y);
-                    contCinza++;
-
-                    ptocinza = new Ponto(x,y);
-                    k = Marcacoes.busca(ptocinza);
-                    if (k >= 0) {
-                        Base = Marcacoes.pega(k);
-                        Base.inserePonto(ptocinza);
-                        i=k+1;
-                        A = Marcacoes.pega(i);
-                        while (A != null) {
-                            if (A.buscaPonto(ptocinza)) {
-                                for (j=0; j < A.tamanho(); j++) {
-                                    Base.inserePonto(A.pega(j));
-                                }
-                                Marcacoes.remove(i);
-                                System.out.println("Agrupou");
-                            }
-                            i++;
-                            A = Marcacoes.pega(i);
-                        }
-                    } else {
-                        A = new Artefato();
-                        A.inserePonto(ptocinza);
-                        Marcacoes.insere(A);
-                        System.out.println("Novo artefato " + Marcacoes.tamanho());
-                    }
-                }
-            }
-        }*/
-
 
         // Encontrar Marcações
-        for (y=140; y < H; y++) {
-            for (x = 0; x < 24; x++) {
+        for (y=0; y < H; y++) {  // Define o início para um posição definida para evitar tons de cinza em outras partes
+            for (x = 0; x < W/26; x++) { // Limita o intrevalo da coluna para evitar tons de cinza em outras partes da imagen
                 pix = img.Pixel(x, y);
                 if (cinza(pix)) {
                     System.out.printf("r = " + pix[0] + " g= " + pix[1] + " b = " + pix[2] + "\n");
-                    contCinza++;
 
                     ptocinza = new Ponto(x,y);
                     k = Marcacoes.busca(ptocinza);
@@ -184,7 +145,6 @@ public class Megasena {
             for (x = 0; x < W; x++) {
                 pix = img.Pixel(x, y);
                 if (preto(pix)) {
-                    cont2++;
 
                     ptocinza = new Ponto(x,y);
                     k = Bolinhas.busca(ptocinza);
@@ -215,69 +175,87 @@ public class Megasena {
         }
 
 
-
-
-        Hashtable<Integer,Integer> C = new Hashtable<Integer,Integer>();
-        int t;
-        int z;
-
-        System.out.printf("Lista de Marcacoes: \n");
-        for (i=0; i < Marcacoes.tamanho(); i++) {
-            A = Marcacoes.pega(i);
-            t = A.tamanho();
-            if (C.get(t)== null) {
-                C.put(t, 1);
-            } else {
-                z = C.get(t)+1;
-                C.put(t,z);
-            }
-
-            A.calcCentro();
-            System.out.printf("Linha " + (i+1)  + " em x=" + A.getCentro().x() + " y=" + A.getCentro().y() + "\n" ) ;
-
-        }
-
-
-        System.out.printf("Lista de Marcações: \n");
-        for (i=0; i < Bolinhas.tamanho(); i++) {
-            M = Bolinhas.pega(i);
-            t = M.tamanho();
-            if (C.get(t)== null) {
-                C.put(t, 1);
-            } else {
-                z = C.get(t)+1;
-                C.put(t,z);
-            }
-
-            M.calcCentro();
-            System.out.printf("Marcação " + (i+1)  + " em x=" + M.getCentro().x() + " y=" + M.getCentro().y() + "\n" ) ;
-
-        }
-
-
         int numOcorrencias =0;
-
+        boolean naopassou = true;
 
         System.out.printf("Comparações: \n");
 
         // Percorre todos as Marcadores e Bolinhas
         for (i=0; i < Marcacoes.tamanho(); i++) {
 
+            naopassou = true;
             for (j=0; j < Bolinhas.tamanho(); j++){
 
                 A = Marcacoes.pega(i);
                 M = Bolinhas.pega(j);
 
 
-
                 // Compara todos os Pontos dos Marcacoes, caso encontre pelo menos cem ocorrencias na mesma linha,
                 // para que não se contabilize a marcação de outra linha, retorna true;
                 if(comparaPontos(A,M)){
-                    
+
                     //System.out.printf("Houve uma occorencia de Linha x Marcação em \n");
 
-        
-                    System.out.printf("\nO jogador marcou na dezena " + Math.round(M.pega(0).x() / 50) + " Na linha "+ (i) + "\n");
+                    // A variável i identifica a linha
+                    if(i == 1){
+                        System.out.printf("---------------------- NÚMEROS ESCOLHIDOS NO JOGO1 ----------------------\n");
+
+                    }
+
+                    // Se passar pela linha  8 significa que foi encontrada uma ocorrencia em comparaPontos
+                    if(i == 7){
+                        System.out.printf("\nO Jogo 1 foi Anulado\n");
+                    }
+
+                    // se a linha foi a de 1 à 7
+                    else if(i > 0 && i < 8) {
+
+                        // O número é igual a posicao x da linha
+                        // dividido pela proporcao da coluna ( W /12 ) somado ao numero da linha vezes 10
+                        //  ex. 2 + (1 * 10) = número 2 foi marcado
+                        System.out.printf((Math.round(M.pega(0).x() / (W /12))) + ((i-1) * 10) + " - ");
+                    }
+
+                    if(i == 9 && naopassou){
+                        naopassou = false;
+                        System.out.printf("\n---------------------- NÚMEROS ESCOLHIDOS NO JOGO2 ----------------------\n");
+
+                    }
+
+
+                    if(i == 14){
+                        System.out.printf("\nO Jogo 2 foi Anulado\n");
+                    }
+
+
+                    else if(i > 7 && i < 15) {
+
+                        System.out.printf(Math.round(M.pega(0).x() / (W /12)) + (i-8) * 10 + " - ");
+                    }
+
+
+                    if(i == 15 && naopassou){
+                        naopassou = false;
+                        System.out.printf("\n---------------------- NÚMEROS ESCOLHIDOS NO JOGO3 ----------------------\n");
+
+                    }
+
+
+                    if(i == 21){
+                        System.out.printf("\nO Jogo 2 foi Anulado\n");
+                    }
+
+
+                    else if(i > 14 && i < 21) {
+
+                        System.out.printf(Math.round(M.pega(0).x() / (W /12)) + (i-15) * 10 + " - ");
+                    }
+
+
+
+
+
+
 
 
                 }
@@ -302,11 +280,14 @@ public class Megasena {
            //  System.out.println("Index: " + z + ": Marcacoes " + C.get(z));
 
         }*/
-        System.out.printf("Total Linhas:" + Marcacoes.tamanho());
+
+        System.out.printf("\nÁrea da Imagens de  W= " + W + " e H = " + H);
+
+        System.out.printf("\nTotal Marcações na area demilitada:" + Marcacoes.tamanho());
 
         System.out.printf(" \n");
 
-        System.out.printf("Total Marcações:" + Bolinhas.tamanho());
+        System.out.printf("Total Circulos:" + Bolinhas.tamanho());
 
         System.out.printf(" \n");
 
